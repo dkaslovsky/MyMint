@@ -70,9 +70,7 @@ func buildCreateTableQuery(table Table) (query string) {
 	)
 }
 
-func readCSV(path string) (rows []interface{}, err error) {
-	recordLen := 2
-
+func readCSV(path string, rowParser func([]string) (interface{}, error)) (rows []interface{}, err error) {
 	csvFile, err := os.Open(path)
 	if err != nil {
 		return rows, err
@@ -88,25 +86,35 @@ func readCSV(path string) (rows []interface{}, err error) {
 		if err != nil {
 			return rows, err
 		}
-		if len(record) != recordLen {
-			return rows, fmt.Errorf(
-				"malformed record [%v]: expected [%d] columns, found [%d]",
-				record,
-				recordLen,
-				len(record),
-			)
-		}
-		val, err := strconv.ParseFloat(record[1], 64)
+		row, err := rowParser(record)
 		if err != nil {
-			return rows, fmt.Errorf("could not parse record [%v]: %s", record, err)
-		}
-		row := ExampleTableRow{
-			Name: record[0],
-			Val:  val,
+			return rows, err
 		}
 		rows = append(rows, row)
 	}
 	return rows, nil
+}
+
+func exampleTableRowCSVParser(record []string) (row interface{}, err error) {
+	// this check is for safety but not needed since record will come from csv.Reader.Read()
+	expectedRecordLen := 2
+	if len(record) != expectedRecordLen {
+		return row, fmt.Errorf(
+			"malformed record [%v]: expected [%d] columns, found [%d]",
+			record,
+			expectedRecordLen,
+			len(record),
+		)
+	}
+	name := record[0]
+	val, err := strconv.ParseFloat(record[1], 64)
+	if err != nil {
+		return row, fmt.Errorf("could not parse record [%v]: %s", record, err)
+	}
+	return ExampleTableRow{
+		Name: name,
+		Val:  val,
+	}, nil
 }
 
 func main() {
@@ -122,7 +130,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	csvRows, err := readCSV("./example.csv")
+	csvRows, err := readCSV("./example.csv", exampleTableRowCSVParser)
 	if err != nil {
 		log.Fatal(err)
 	}
