@@ -1,142 +1,47 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/csv"
 	"fmt"
-	"io"
 	"log"
 	"os"
-	"strconv"
-	"strings"
+
+	"github.com/dkaslovsky/MyMint/pkg/data" // PICK A BETTER NAME THAN DATA!
+	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
+	"github.com/dkaslovsky/MyMint/pkg/parse"
 
 	"github.com/doug-martin/goqu/v9"
 	_ "github.com/doug-martin/goqu/v9/dialect/sqlite3"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Db struct {
-	*goqu.Database
-	driver *sql.DB
-}
-
-func NewDb(name string) (db *Db, err error) {
-	driver, err := sql.Open("sqlite3", name)
-	if err != nil {
-		return db, err
-	}
-	return &Db{
-		Database: goqu.New("sqlite3", driver),
-		driver:   driver,
-	}, nil
-}
-
-func (db *Db) Close() (err error) {
-	return db.driver.Close()
-}
-
-type Schema map[string]string
-
-type Table struct {
-	Name   string
-	Schema Schema
-}
-
-type ExampleTableRow struct {
-	Name string  `db:"name"`
-	Val  float64 `db:"val"`
-}
-
 var dbName = "mydb.db"
-
-var exampleTable = Table{
-	Name: "mytable",
-	Schema: Schema{
-		"id":   "INTEGER PRIMARY KEY",
-		"name": "TEXT",
-		"val":  "REAL",
-	},
-}
-
-func buildCreateTableQuery(table Table) (query string) {
-	var s []string
-	for col, colType := range table.Schema {
-		s = append(s, fmt.Sprintf("%s %s", col, colType))
-	}
-	return fmt.Sprintf(
-		"CREATE TABLE IF NOT EXISTS %s (%s)",
-		table.Name,
-		strings.Join(s, ", "),
-	)
-}
-
-func readCSV(path string, rowParser func([]string) (interface{}, error)) (rows []interface{}, err error) {
-	csvFile, err := os.Open(path)
-	if err != nil {
-		return rows, err
-	}
-	defer csvFile.Close()
-
-	reader := csv.NewReader(csvFile)
-	for {
-		record, err := reader.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return rows, err
-		}
-		row, err := rowParser(record)
-		if err != nil {
-			return rows, err
-		}
-		rows = append(rows, row)
-	}
-	return rows, nil
-}
-
-func exampleTableRowCSVParser(record []string) (row interface{}, err error) {
-	// this check is for safety but not needed since record will come from csv.Reader.Read()
-	expectedRecordLen := 2
-	if len(record) != expectedRecordLen {
-		return row, fmt.Errorf(
-			"malformed record [%v]: expected [%d] columns, found [%d]",
-			record,
-			expectedRecordLen,
-			len(record),
-		)
-	}
-	name := record[0]
-	val, err := strconv.ParseFloat(record[1], 64)
-	if err != nil {
-		return row, fmt.Errorf("could not parse record [%v]: %s", record, err)
-	}
-	return ExampleTableRow{
-		Name: name,
-		Val:  val,
-	}, nil
-}
+var table = sqlite.NewTable("mytable", data.ExampleTableSchema)
 
 func main() {
 
-	db, err := NewDb(dbName)
+	db, err := sqlite.NewDb(dbName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	_, err = db.Exec(buildCreateTableQuery(exampleTable))
+	_, err = db.Exec(table.GetCreateQuery())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	csvRows, err := readCSV("./example.csv", exampleTableRowCSVParser)
+	csvFile, err := os.Open("./example.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer csvFile.Close()
+	csvRows, err := parse.ReadCSV(csvFile, data.ExampleTableCSVParser)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	_, err = db.
-		Insert(exampleTable.Name).
+		Insert(table.Name).
 		Rows(csvRows...).
 		Executor().
 		Exec()
@@ -144,12 +49,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// validate that data was inserted
 	queryRows := []struct {
 		ID int64 `db:"id"`
-		ExampleTableRow
+		data.ExampleTableRow
 	}{}
 	err = db.
-		From(exampleTable.Name).
+		From(table.Name).
 		Where(goqu.C("val").Gt(101)).
 		ScanStructs(&queryRows)
 	if err != nil {
