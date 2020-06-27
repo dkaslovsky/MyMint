@@ -2,8 +2,12 @@ package main
 
 import (
 	"database/sql"
+	"encoding/csv"
 	"fmt"
+	"io"
 	"log"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/doug-martin/goqu/v9"
@@ -66,6 +70,45 @@ func buildCreateTableQuery(table Table) (query string) {
 	)
 }
 
+func readCSV(path string) (rows []interface{}, err error) {
+	recordLen := 2
+
+	csvFile, err := os.Open(path)
+	if err != nil {
+		return rows, err
+	}
+	defer csvFile.Close()
+
+	reader := csv.NewReader(csvFile)
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return rows, err
+		}
+		if len(record) != recordLen {
+			return rows, fmt.Errorf(
+				"malformed record [%v]: expected [%d] columns, found [%d]",
+				record,
+				recordLen,
+				len(record),
+			)
+		}
+		val, err := strconv.ParseFloat(record[1], 64)
+		if err != nil {
+			return rows, fmt.Errorf("could not parse record [%v]: %s", record, err)
+		}
+		row := ExampleTableRow{
+			Name: record[0],
+			Val:  val,
+		}
+		rows = append(rows, row)
+	}
+	return rows, nil
+}
+
 func main() {
 
 	db, err := NewDb(dbName)
@@ -79,30 +122,30 @@ func main() {
 		log.Fatal(err)
 	}
 
-	insertRows := []interface{}{
-		ExampleTableRow{Name: "foo", Val: 10.1},
-		ExampleTableRow{Name: "bar", Val: 13.5},
-		ExampleTableRow{Name: "baz", Val: 11},
+	csvRows, err := readCSV("./example.csv")
+	if err != nil {
+		log.Fatal(err)
 	}
+
 	_, err = db.
 		Insert(exampleTable.Name).
-		Rows(insertRows...).
+		Rows(csvRows...).
 		Executor().
 		Exec()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	rows := []struct {
+	queryRows := []struct {
 		ID int64 `db:"id"`
 		ExampleTableRow
 	}{}
 	err = db.
 		From(exampleTable.Name).
-		Where(goqu.C("val").Gt(10.5)).
-		ScanStructs(&rows)
+		Where(goqu.C("val").Gt(101)).
+		ScanStructs(&queryRows)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(rows)
+	fmt.Println(queryRows)
 }
