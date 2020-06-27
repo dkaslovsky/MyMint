@@ -10,8 +10,6 @@ import (
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 
 	"github.com/doug-martin/goqu/v9"
-	_ "github.com/doug-martin/goqu/v9/dialect/sqlite3"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 var dbName = "mydb.db"
@@ -49,6 +47,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// ------------------------------------------------
 	// validate that data was inserted
 	queryRows := []struct {
 		ID int64 `db:"id"`
