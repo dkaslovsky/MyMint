@@ -13,7 +13,6 @@ import (
 )
 
 var dbName = "mydb.db"
-var table = sqlite.NewTable("mytable", data.ExampleTableSchema)
 
 func main() {
 
@@ -23,7 +22,8 @@ func main() {
 	}
 	defer db.Close()
 
-	_, err = db.Exec(table.GetCreateQuery())
+	table := sqlite.NewTable("mytable", data.ExampleTableSchema)
+	err = db.CreateTable(table)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,11 +38,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = db.
-		Insert(table.Name).
-		Rows(csvRows...).
-		Executor().
-		Exec()
+	err = db.InsertRows(table, csvRows)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/doug-martin/goqu/v9"
+	// blank import for drivers
 	_ "github.com/doug-martin/goqu/v9/dialect/sqlite3"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -31,6 +32,22 @@ func NewDb(name string) (db *Db, err error) {
 // Close closes the database driver
 func (db *Db) Close() (err error) {
 	return db.driver.Close()
+}
+
+// CreateTable creates a table
+func (db *Db) CreateTable(table *Table) (err error) {
+	_, err = db.Exec(table.GetCreateQuery())
+	return err
+}
+
+// InsertRows inserts rows into a table
+func (db *Db) InsertRows(table *Table, rows []interface{}) (err error) {
+	_, err = db.
+		Insert(table.Name).
+		Rows(rows...).
+		Executor().
+		Exec()
+	return err
 }
 
 // Schema represents a table's schema as a map of column name to type

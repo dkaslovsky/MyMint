@@ -7,6 +7,8 @@ import (
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 )
 
+const expectedRecordLen int = 2
+
 var ExampleTableSchema = sqlite.Schema{
 	"id":   "INTEGER PRIMARY KEY",
 	"name": "TEXT",
@@ -20,7 +22,6 @@ type ExampleTableRow struct {
 
 func ExampleTableCSVParser(record []string) (row interface{}, err error) {
 	// this check is for safety but not needed since record will come from csv.Reader.Read()
-	expectedRecordLen := 2
 	if len(record) != expectedRecordLen {
 		return row, fmt.Errorf(
 			"malformed record [%v]: expected [%d] columns, found [%d]",
