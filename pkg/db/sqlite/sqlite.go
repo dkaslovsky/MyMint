@@ -41,9 +41,9 @@ func (db *Db) CreateTable(table *Table) (err error) {
 }
 
 // InsertRows inserts rows into a table
-func (db *Db) InsertRows(table *Table, rows []interface{}) (err error) {
+func (db *Db) InsertRows(tableName string, rows []interface{}) (err error) {
 	_, err = db.
-		Insert(table.Name).
+		Insert(tableName).
 		Rows(rows...).
 		Executor().
 		Exec()
