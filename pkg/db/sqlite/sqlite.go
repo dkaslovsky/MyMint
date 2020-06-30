@@ -11,6 +11,14 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type DbType string
+
+const (
+	DbInteger DbType = "INTEGER"
+	DbFloat   DbType = "REAL"
+	DbString  DbType = "TEXT"
+)
+
 // Db wraps goqu.Database to expose a Close method for the underlying database driver
 type Db struct {
 	*goqu.Database

@@ -1,9 +1,11 @@
 package csv
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"os"
 
-	"github.com/dkaslovsky/MyMint/pkg/data"
+	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/spf13/cobra"
@@ -24,6 +26,23 @@ func CreateCsvCmd() *cobra.Command {
 		Use:   "csv",
 		Short: "Persist records from a csv file",
 		RunE: func(cmd *cobra.Command, args []string) error {
+
+			confFile, err := ioutil.ReadFile("./config.json")
+			if err != nil {
+				return err
+			}
+
+			c := &conf.Config{}
+			err = json.Unmarshal(confFile, c)
+			if err != nil {
+				return err
+			}
+
+			csvParser, err := c.GenerateCsvParser()
+			if err != nil {
+				return err
+			}
+
 			db, err := sqlite.NewDb(opts.Db)
 			if err != nil {
 				return err
@@ -36,12 +55,12 @@ func CreateCsvCmd() *cobra.Command {
 			}
 			defer csvFile.Close()
 
-			csvRows, err := parse.ReadCSV(csvFile, data.ExampleTableCSVParser) // FIX ME!
+			csvRows, err := parse.ReadCSV(csvFile, csvParser)
 			if err != nil {
 				return err
 			}
 
-			err = db.InsertRows(opts.Table, csvRows)
+			err = db.InsertRows(c.TableName, csvRows)
 			if err != nil {
 				return err
 			}
@@ -57,7 +76,7 @@ func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
 	flags.StringVarP(&opts.Path, "path", "p", "", "Path to csv file")
 	flags.StringVarP(&opts.Db, "database", "d", "", "Name of database")
-	flags.StringVarP(&opts.Table, "table", "t", "", "Name of table")
+	//flags.StringVarP(&opts.Table, "table", "t", "", "Name of table")
 	cobra.MarkFlagRequired(flags, "database")
-	cobra.MarkFlagRequired(flags, "table")
+	//cobra.MarkFlagRequired(flags, "table")
 }
