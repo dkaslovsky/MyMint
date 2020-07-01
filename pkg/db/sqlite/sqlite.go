@@ -11,8 +11,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// DbType is a sqlite3 data type
 type DbType string
 
+// sqlite3 data types
 const (
 	DbInteger DbType = "INTEGER"
 	DbFloat   DbType = "REAL"
@@ -43,15 +45,16 @@ func (db *Db) Close() (err error) {
 }
 
 // CreateTable creates a table
-func (db *Db) CreateTable(table *Table) (err error) {
-	_, err = db.Exec(table.GetCreateQuery())
+func (db *Db) CreateTable(name string, schema Schema) (err error) {
+	query := fmt.Sprintf("CREATE TABLE %s (%s)", name, schema)
+	_, err = db.Exec(query)
 	return err
 }
 
 // InsertRows inserts rows into a table
-func (db *Db) InsertRows(tableName string, rows []interface{}) (err error) {
+func (db *Db) InsertRows(table string, rows []interface{}) (err error) {
 	_, err = db.
-		Insert(tableName).
+		Insert(table).
 		Rows(rows...).
 		Executor().
 		Exec()
@@ -61,29 +64,10 @@ func (db *Db) InsertRows(tableName string, rows []interface{}) (err error) {
 // Schema represents a table's schema as a map of column name to type
 type Schema map[string]string
 
-// Table is a SQL table
-type Table struct {
-	Name   string
-	Schema Schema
-}
-
-// NewTable creates a new Table
-func NewTable(name string, schema Schema) (table *Table) {
-	return &Table{
-		Name:   name,
-		Schema: schema,
-	}
-}
-
-// GetCreateQuery builds a query to create a table
-func (table *Table) GetCreateQuery() (query string) {
-	var s []string
-	for col, colType := range table.Schema {
+func (sc Schema) String() (st string) {
+	s := []string{}
+	for col, colType := range sc {
 		s = append(s, fmt.Sprintf("%s %s", col, colType))
 	}
-	return fmt.Sprintf(
-		"CREATE TABLE IF NOT EXISTS %s (%s)",
-		table.Name,
-		strings.Join(s, ", "),
-	)
+	return strings.Join(s, ",")
 }
