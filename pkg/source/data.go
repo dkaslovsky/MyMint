@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
+	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/doug-martin/goqu/v9"
 )
 
@@ -36,8 +37,8 @@ func LoadDataSource(path string) (ds *DataSource, err error) {
 	return ds, nil
 }
 
-// GenerateCsvParser returns a function for parsing lines of a CSV data source
-func (ds *DataSource) GenerateCsvParser() (lineParser func([]string) (interface{}, error), err error) {
+// GenerateCsvRowParser returns a function for parsing lines of a CSV data source
+func (ds *DataSource) GenerateCsvRowParser() (rowParser parse.CsvRowParser, err error) {
 	return func(vals []string) (record interface{}, err error) {
 		var ok bool
 		row := goqu.Record{}

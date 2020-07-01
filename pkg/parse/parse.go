@@ -5,8 +5,11 @@ import (
 	"io"
 )
 
-// ReadCSV parses lines of a CSV file
-func ReadCSV(r io.Reader, lineParser func([]string) (interface{}, error)) (rows []interface{}, err error) {
+// CsvRowParser is a function that parses a row of a CSV
+type CsvRowParser func([]string) (interface{}, error)
+
+// ReadCsvWithoutHeader parses lines of a CSV file that does not have a header
+func ReadCsvWithoutHeader(r io.Reader, rowParser CsvRowParser) (rows []interface{}, err error) {
 	reader := csv.NewReader(r)
 	for {
 		line, err := reader.Read()
@@ -16,7 +19,33 @@ func ReadCSV(r io.Reader, lineParser func([]string) (interface{}, error)) (rows 
 		if err != nil {
 			return rows, err
 		}
-		row, err := lineParser(line)
+		row, err := rowParser(line)
+		if err != nil {
+			return rows, err
+		}
+		rows = append(rows, row)
+	}
+	return rows, nil
+}
+
+// ReadCsvWithHeader parses lines of a CSV file that has a header
+func ReadCsvWithHeader(r io.Reader, rowParser CsvRowParser) (rows []interface{}, err error) {
+	reader := csv.NewReader(r)
+	seenHeader := false
+	for {
+		line, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return rows, err
+		}
+		// skip the header
+		if !seenHeader {
+			seenHeader = true
+			continue
+		}
+		row, err := rowParser(line)
 		if err != nil {
 			return rows, err
 		}
