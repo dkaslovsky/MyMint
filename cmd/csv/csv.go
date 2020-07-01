@@ -1,21 +1,19 @@
 package csv
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"os"
 
-	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
+	"github.com/dkaslovsky/MyMint/pkg/source"
 	"github.com/spf13/cobra"
 )
 
 // Options are options for configuring the csv command
 type Options struct {
-	Path  string
-	Db    string
-	Table string
+	Path   string
+	Db     string
+	Source string
 }
 
 // CreateCsvCmd generates the configuration for the csv subcommand.
@@ -27,18 +25,26 @@ func CreateCsvCmd() *cobra.Command {
 		Short: "Persist records from a csv file",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			confFile, err := ioutil.ReadFile("./config.json")
+			ds, err := source.LoadDataSource(opts.Source)
 			if err != nil {
 				return err
 			}
 
-			c := &conf.Config{}
-			err = json.Unmarshal(confFile, c)
+			csvRowParser, err := ds.GenerateCsvRowParser()
 			if err != nil {
 				return err
 			}
+			csvFile, err := os.Open(opts.Path)
+			if err != nil {
+				return err
+			}
+			defer csvFile.Close()
 
-			csvParser, err := c.GenerateCsvParser()
+			csvReader := parse.ReadCsvWithoutHeader
+			if ds.Csv.Header {
+				csvReader = parse.ReadCsvWithHeader
+			}
+			csvRows, err := csvReader(csvFile, csvRowParser)
 			if err != nil {
 				return err
 			}
@@ -48,19 +54,7 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 			defer db.Close()
-
-			csvFile, err := os.Open(opts.Path)
-			if err != nil {
-				return err
-			}
-			defer csvFile.Close()
-
-			csvRows, err := parse.ReadCSV(csvFile, csvParser)
-			if err != nil {
-				return err
-			}
-
-			err = db.InsertRows(c.TableName, csvRows)
+			err = db.InsertRows(ds.Table, csvRows)
 			if err != nil {
 				return err
 			}
@@ -75,8 +69,8 @@ func CreateCsvCmd() *cobra.Command {
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
 	flags.StringVarP(&opts.Path, "path", "p", "", "Path to csv file")
-	flags.StringVarP(&opts.Db, "database", "d", "", "Name of database")
-	//flags.StringVarP(&opts.Table, "table", "t", "", "Name of table")
-	cobra.MarkFlagRequired(flags, "database")
-	//cobra.MarkFlagRequired(flags, "table")
+	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
+	flags.StringVarP(&opts.Db, "database", "d", "mydb.db", "Name of database")
+	cobra.MarkFlagRequired(flags, "path")
+	cobra.MarkFlagRequired(flags, "source")
 }

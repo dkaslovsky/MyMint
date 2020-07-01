@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"github.com/dkaslovsky/MyMint/cmd/createtable"
 	"github.com/dkaslovsky/MyMint/cmd/csv"
+	"github.com/dkaslovsky/MyMint/cmd/dumptable"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +18,8 @@ func Run() error {
 	}
 	cmd.AddCommand(
 		csv.CreateCsvCmd(),
+		dumptable.CreateDumpTableCmd(),
+		createtable.CreateCreateTableCmd(),
 	)
 	return cmd.Execute()
 }
