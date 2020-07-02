@@ -44,7 +44,6 @@ func (ds *DataSource) GenerateCsvRowParser() (rowParser parse.CsvRowParser, err 
 		row := goqu.Record{}
 
 		for i, val := range vals {
-			//field := ds.CsvFields[i]
 			field := ds.Csv.Fields[i]
 			fieldType := sqlite.DbType(strings.Split(ds.Schema[field], " ")[0])
 			parser, found := parsers[fieldType]
@@ -84,9 +83,15 @@ type parser func(string) (interface{}, error)
 
 var (
 	integerParser = func(s string) (interface{}, error) {
+		if s == "" {
+			return 0, nil
+		}
 		return strconv.ParseInt(s, 10, 64)
 	}
 	floatParser = func(s string) (interface{}, error) {
+		if s == "" {
+			return 0.0, nil
+		}
 		return strconv.ParseFloat(s, 64)
 	}
 	stringParser = func(s string) (interface{}, error) {
