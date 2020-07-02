@@ -14,4 +14,8 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+# sqlite dbs
 *.db
+
+# datasource files
+datasources/
