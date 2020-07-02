@@ -67,7 +67,7 @@ type Schema map[string]string
 func (sc Schema) String() (st string) {
 	s := []string{}
 	for col, colType := range sc {
-		s = append(s, fmt.Sprintf("%s %s", col, colType))
+		s = append(s, fmt.Sprintf("`%s` %s", col, colType))
 	}
 	return strings.Join(s, ",")
 }
