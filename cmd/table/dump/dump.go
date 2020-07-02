@@ -1,4 +1,4 @@
-package dumptable
+package dump
 
 import (
 	"fmt"
@@ -7,19 +7,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Options are options for configuring the csv command
+// Options are options for configuring the dump command
 type Options struct {
 	Db    string
 	Table string
 }
 
-// CreateDumpTableCmd generates the configuration for the dump subcommand.
+// CreateDumpCmd generates the configuration for the dump subcommand.
 // It can be attached to any upstream cobra command
-func CreateDumpTableCmd() *cobra.Command {
+func CreateDumpCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "dump",
-		Short: "Dump table contents to console (for debug only, will be removed)",
+		Short: "Dump table contents to console",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			db, err := sqlite.NewDb(opts.Db)

@@ -1,4 +1,4 @@
-package createtable
+package create
 
 import (
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
@@ -6,15 +6,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Options are options for configuring the csv command
+// Options are options for configuring the create command
 type Options struct {
 	Db     string
 	Source string
 }
 
-// CreateCreateTableCmd generates the configuration for the create subcommand.
+// CreateCreateCmd generates the configuration for the create subcommand.
 // It can be attached to any upstream cobra command
-func CreateCreateTableCmd() *cobra.Command {
+func CreateCreateCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "create",
