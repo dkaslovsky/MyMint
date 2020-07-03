@@ -1,4 +1,8 @@
 package defaults
 
-// DefaultDB is the default sqlite database file
-const DefaultDB string = "mydb.db"
+const (
+	// DefaultDb is the default sqlite database file
+	DefaultDb = "mydb.db"
+	// DefaultIDColumn is the default name of the primary key in a SQL table
+	DefaultIDColumn = "id"
+)

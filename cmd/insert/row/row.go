@@ -1,19 +1,18 @@
 package row
 
 import (
+	"log"
 	"strings"
 
 	"github.com/dkaslovsky/MyMint/cmd/defaults"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/dkaslovsky/MyMint/pkg/source"
-	"github.com/grindlemire/log"
 	"github.com/spf13/cobra"
 )
 
 // Options are options for configuring the row command
 type Options struct {
-	Path   string
 	Db     string
 	Source string
 }
@@ -55,7 +54,7 @@ func CreateRowCmd() *cobra.Command {
 				return err
 			}
 
-			log.Infof("Inserted 1 row with id [%d]", id)
+			log.Printf("Inserted 1 row with id [%d]", id)
 			return nil
 		},
 	}
@@ -65,7 +64,7 @@ func CreateRowCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDB, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDb, "Name of database")
 	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	cobra.MarkFlagRequired(flags, "source")
 }

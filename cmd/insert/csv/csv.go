@@ -1,11 +1,10 @@
 package csv
 
 import (
+	"log"
 	"os"
 
 	"github.com/dkaslovsky/MyMint/cmd/defaults"
-	"github.com/grindlemire/log"
-
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/dkaslovsky/MyMint/pkg/source"
@@ -14,7 +13,6 @@ import (
 
 // Options are options for configuring the csv command
 type Options struct {
-	Path   string
 	Db     string
 	Source string
 }
@@ -65,7 +63,7 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 
-			log.Infof("Inserted [%d] rows ending with id [%d]", numInserted, lastID)
+			log.Printf("Inserted [%d] rows ending with id [%d]", numInserted, lastID)
 			return nil
 		},
 	}
@@ -75,7 +73,7 @@ func CreateCsvCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDB, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDb, "Name of database")
 	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	cobra.MarkFlagRequired(flags, "source")
 }

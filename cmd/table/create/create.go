@@ -47,7 +47,7 @@ func CreateCreateCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDB, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDb, "Name of database")
 	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	cobra.MarkFlagRequired(flags, "source")
 }
