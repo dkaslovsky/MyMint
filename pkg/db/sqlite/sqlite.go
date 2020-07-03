@@ -52,13 +52,21 @@ func (db *Db) CreateTable(name string, schema Schema) (err error) {
 }
 
 // InsertRows inserts rows into a table
-func (db *Db) InsertRows(table string, rows []interface{}) (err error) {
-	_, err = db.
+func (db *Db) InsertRows(table string, rows []interface{}) (numInsertedRows int64, lastID int64, err error) {
+	res, err := db.
 		Insert(table).
 		Rows(rows...).
 		Executor().
 		Exec()
-	return err
+	lastID, err = res.LastInsertId()
+	if err != nil {
+		return numInsertedRows, lastID, err
+	}
+	numInsertedRows, err = res.RowsAffected()
+	if err != nil {
+		return numInsertedRows, lastID, err
+	}
+	return numInsertedRows, lastID, err
 }
 
 // Schema represents a table's schema as a map of column name to type

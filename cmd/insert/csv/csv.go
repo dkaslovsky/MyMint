@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/dkaslovsky/MyMint/cmd/defaults"
+	"github.com/grindlemire/log"
 
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
@@ -59,11 +60,12 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 			defer db.Close()
-			err = db.InsertRows(ds.Table, csvRows)
+			numInserted, lastID, err := db.InsertRows(ds.Table, csvRows)
 			if err != nil {
 				return err
 			}
 
+			log.Infof("Inserted [%d] rows ending with id [%d]", numInserted, lastID)
 			return nil
 		},
 	}

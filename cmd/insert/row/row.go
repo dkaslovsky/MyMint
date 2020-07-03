@@ -7,6 +7,7 @@ import (
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/dkaslovsky/MyMint/pkg/source"
+	"github.com/grindlemire/log"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +40,7 @@ func CreateRowCmd() *cobra.Command {
 				return err
 			}
 
-			csvRows, err := parse.ReadCsvWithoutHeader(strings.NewReader(row), csvRowParser)
+			csvRow, err := parse.ReadCsvWithoutHeader(strings.NewReader(row), csvRowParser)
 			if err != nil {
 				return err
 			}
@@ -49,11 +50,12 @@ func CreateRowCmd() *cobra.Command {
 				return err
 			}
 			defer db.Close()
-			err = db.InsertRows(ds.Table, csvRows)
+			_, id, err := db.InsertRows(ds.Table, csvRow)
 			if err != nil {
 				return err
 			}
 
+			log.Infof("Inserted 1 row with id [%d]", id)
 			return nil
 		},
 	}
