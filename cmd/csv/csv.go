@@ -23,7 +23,10 @@ func CreateCsvCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "csv",
 		Short: "Persist records from a csv file",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+
+			csvPath := args[0]
 
 			ds, err := source.LoadDataSource(opts.Source)
 			if err != nil {
@@ -34,7 +37,7 @@ func CreateCsvCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			csvFile, err := os.Open(opts.Path)
+			csvFile, err := os.Open(csvPath)
 			if err != nil {
 				return err
 			}
@@ -68,9 +71,7 @@ func CreateCsvCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Path, "path", "p", "", "Path to csv file")
-	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	flags.StringVarP(&opts.Db, "database", "d", "mydb.db", "Name of database")
-	cobra.MarkFlagRequired(flags, "path")
+	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	cobra.MarkFlagRequired(flags, "source")
 }
