@@ -58,6 +58,9 @@ func (db *Db) InsertRows(table string, rows []interface{}) (numInsertedRows int6
 		Rows(rows...).
 		Executor().
 		Exec()
+	if err != nil {
+		return numInsertedRows, lastID, err
+	}
 	lastID, err = res.LastInsertId()
 	if err != nil {
 		return numInsertedRows, lastID, err
@@ -66,7 +69,21 @@ func (db *Db) InsertRows(table string, rows []interface{}) (numInsertedRows int6
 	if err != nil {
 		return numInsertedRows, lastID, err
 	}
-	return numInsertedRows, lastID, err
+	return numInsertedRows, lastID, nil
+}
+
+// DeleteRowsByID deletes rows from a table by their ids
+func (db *Db) DeleteRowsByID(table string, idCol string, ids ...interface{}) (numDeletedRows int64, err error) {
+	res, err := db.
+		Delete(table).
+		Where(goqu.C(idCol).In(ids...)).
+		Executor().
+		Exec()
+	numDeletedRows, err = res.RowsAffected()
+	if err != nil {
+		return numDeletedRows, err
+	}
+	return numDeletedRows, nil
 }
 
 // Schema represents a table's schema as a map of column name to type

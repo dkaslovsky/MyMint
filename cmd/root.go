@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/dkaslovsky/MyMint/cmd/delete"
 	"github.com/dkaslovsky/MyMint/cmd/insert"
 	"github.com/dkaslovsky/MyMint/cmd/source"
 	"github.com/dkaslovsky/MyMint/cmd/table"
@@ -18,6 +19,7 @@ func Run() error {
 	}
 	cmd.AddCommand(
 		insert.CreateInsertCmd(),
+		delete.CreateDeleteCmd(),
 		source.CreateSourceCmd(),
 		table.CreateTableCmd(),
 	)
