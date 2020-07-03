@@ -1,6 +1,7 @@
 package row
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/dkaslovsky/MyMint/cmd/defaults"
@@ -33,6 +34,7 @@ func CreateRowCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			fmt.Println(ds)
 
 			csvRowParser, err := ds.GenerateCsvRowParser()
 			if err != nil {
