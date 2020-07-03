@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/dkaslovsky/MyMint/cmd/csv"
+	"github.com/dkaslovsky/MyMint/cmd/insert"
 	"github.com/dkaslovsky/MyMint/cmd/table"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +16,7 @@ func Run() error {
 		SilenceErrors: true,
 	}
 	cmd.AddCommand(
-		csv.CreateCsvCmd(),
+		insert.CreateInsertCmd(),
 		table.CreateTableCmd(),
 	)
 	return cmd.Execute()
