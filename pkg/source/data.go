@@ -79,6 +79,11 @@ func (ds *DataSource) GenerateCsvRowParser() (rowParser parse.CsvRowParser, err 
 	}, nil
 }
 
+func (ds *DataSource) String() (s string) {
+	bytes, _ := json.MarshalIndent(ds, "", "\t") // safe to ignore err since struct came from json
+	return string(bytes)
+}
+
 type parser func(string) (interface{}, error)
 
 var (
