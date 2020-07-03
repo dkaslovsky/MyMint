@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/dkaslovsky/MyMint/cmd/insert"
+	"github.com/dkaslovsky/MyMint/cmd/source"
 	"github.com/dkaslovsky/MyMint/cmd/table"
 	"github.com/spf13/cobra"
 )
@@ -17,6 +18,7 @@ func Run() error {
 	}
 	cmd.AddCommand(
 		insert.CreateInsertCmd(),
+		source.CreateSourceCmd(),
 		table.CreateTableCmd(),
 	)
 	return cmd.Execute()
