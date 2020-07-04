@@ -20,9 +20,6 @@ func CreateListCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			confDir := os.Getenv(constants.ConfEnvVar)
-			if confDir == "" {
-				return fmt.Errorf("could not read path to mymint config directory from environment variable [%s]", constants.ConfEnvVar)
-			}
 			path := filepath.Join(confDir, constants.DataSourceDir)
 
 			fileInfo, err := os.Stat(path)

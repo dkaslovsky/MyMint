@@ -9,4 +9,6 @@ const (
 	ConfEnvVar = "MYMINT_CONF_DIR"
 	// DataSourceDir is the name of the directory where datasource files are stored
 	DataSourceDir = "datasources"
+	// CategoryFile is the name of the file where categories are stored
+	CategoryFile = "categories"
 )

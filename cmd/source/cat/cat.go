@@ -20,9 +20,6 @@ func CreateCatCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			confDir := os.Getenv(constants.ConfEnvVar)
-			if confDir == "" {
-				return fmt.Errorf("could not read path to mymint config directory from environment variable [%s]", constants.ConfEnvVar)
-			}
 			path := filepath.Join(confDir, constants.DataSourceDir, args[0])
 			ext := filepath.Ext(path)
 			if ext == "" {
