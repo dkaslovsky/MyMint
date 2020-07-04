@@ -19,17 +19,18 @@ func CreateListCmd() *cobra.Command {
 		Short: "List datasources",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			path := os.Getenv(constants.DataSourceEnvVar)
-			if path == "" {
-				return fmt.Errorf("could not read path to datasource files from environment variable [%s]", constants.DataSourceEnvVar)
+			confDir := os.Getenv(constants.ConfEnvVar)
+			if confDir == "" {
+				return fmt.Errorf("could not read path to mymint config directory from environment variable [%s]", constants.ConfEnvVar)
 			}
+			path := filepath.Join(confDir, constants.DataSourceDir)
 
 			fileInfo, err := os.Stat(path)
 			if err != nil {
 				return err
 			}
 			if !fileInfo.Mode().IsDir() {
-				return fmt.Errorf("expected directory, received [%s]", path)
+				return fmt.Errorf("[%s] is not a directory", path)
 			}
 			files, err := ioutil.ReadDir(path)
 			if err != nil {
