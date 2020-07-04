@@ -3,7 +3,7 @@ package delete
 import (
 	"log"
 
-	"github.com/dkaslovsky/MyMint/cmd/defaults"
+	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/spf13/cobra"
 )
@@ -51,8 +51,8 @@ func CreateDeleteCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDb, "Name of database")
-	flags.StringVarP(&opts.IDCol, "id", "i", defaults.DefaultIDColumn, "Name of id column")
+	flags.StringVarP(&opts.Db, "database", "d", constants.DefaultDb, "Name of database")
+	flags.StringVarP(&opts.IDCol, "id", "i", constants.DefaultIDColumn, "Name of id column")
 	flags.StringVarP(&opts.Table, "table", "t", "", "table to delete from")
 	cobra.MarkFlagRequired(flags, "table")
 }

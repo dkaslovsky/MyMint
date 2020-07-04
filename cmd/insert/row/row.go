@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/dkaslovsky/MyMint/cmd/defaults"
+	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/dkaslovsky/MyMint/pkg/source"
@@ -64,7 +64,7 @@ func CreateRowCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", defaults.DefaultDb, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", constants.DefaultDb, "Name of database")
 	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	cobra.MarkFlagRequired(flags, "source")
 }
