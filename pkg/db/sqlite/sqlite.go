@@ -79,6 +79,9 @@ func (db *Db) DeleteRowsByID(table string, idCol string, ids ...interface{}) (nu
 		Where(goqu.C(idCol).In(ids...)).
 		Executor().
 		Exec()
+	if err != nil {
+		return numDeletedRows, err
+	}
 	numDeletedRows, err = res.RowsAffected()
 	if err != nil {
 		return numDeletedRows, err
