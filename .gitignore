@@ -17,5 +17,5 @@
 # sqlite dbs
 *.db
 
-# datasource files
-datasources/
+# mymint config files
+.mymint/
