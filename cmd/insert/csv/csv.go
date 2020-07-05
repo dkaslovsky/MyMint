@@ -3,6 +3,7 @@ package csv
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
@@ -29,7 +30,14 @@ func CreateCsvCmd() *cobra.Command {
 
 			csvPath := args[0]
 
-			ds, err := source.LoadDataSource(opts.Source)
+			confDir := os.Getenv(constants.ConfEnvVar)
+			sourcePath := filepath.Join(confDir, constants.DataSourceDir, opts.Source)
+			ext := filepath.Ext(sourcePath)
+			if ext == "" {
+				sourcePath += ".json"
+			}
+
+			ds, err := source.LoadDataSource(sourcePath)
 			if err != nil {
 				return err
 			}

@@ -2,6 +2,8 @@ package row
 
 import (
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/dkaslovsky/MyMint/cmd/constants"
@@ -29,7 +31,14 @@ func CreateRowCmd() *cobra.Command {
 
 			row := args[0]
 
-			ds, err := source.LoadDataSource(opts.Source)
+			confDir := os.Getenv(constants.ConfEnvVar)
+			sourcePath := filepath.Join(confDir, constants.DataSourceDir, opts.Source)
+			ext := filepath.Ext(sourcePath)
+			if ext == "" {
+				sourcePath += ".json"
+			}
+
+			ds, err := source.LoadDataSource(sourcePath)
 			if err != nil {
 				return err
 			}
@@ -54,7 +63,7 @@ func CreateRowCmd() *cobra.Command {
 				return err
 			}
 
-			log.Printf("Inserted 1 row with id [%d]", id)
+			log.Printf("Inserted row with id [%d]", id)
 			return nil
 		},
 	}
@@ -65,6 +74,6 @@ func CreateRowCmd() *cobra.Command {
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
 	flags.StringVarP(&opts.Db, "database", "d", constants.DefaultDb, "Name of database")
-	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
+	flags.StringVarP(&opts.Source, "source", "s", "", "Datasource definition file name")
 	cobra.MarkFlagRequired(flags, "source")
 }
