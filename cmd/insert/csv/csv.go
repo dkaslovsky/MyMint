@@ -1,14 +1,17 @@
 package csv
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/dkaslovsky/MyMint/cmd/constants"
+	"github.com/dkaslovsky/MyMint/pkg/category"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/parse"
 	"github.com/dkaslovsky/MyMint/pkg/source"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/spf13/cobra"
 )
 
@@ -60,6 +63,22 @@ func CreateCsvCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+
+			/////////////////////////
+			catMap, err := category.LoadAutoCategories("./.mymint/keyword_categories.json")
+			if err != nil {
+				return err
+			}
+			for _, row := range csvRows {
+				r := row.(goqu.Record)
+				cat, err := catMap.Apply(r, "Description")
+				if err != nil {
+					return err
+				}
+				r["Category"] = cat
+				fmt.Println(row)
+			}
+			/////////////////////////
 
 			db, err := sqlite.NewDb(opts.Db)
 			if err != nil {
