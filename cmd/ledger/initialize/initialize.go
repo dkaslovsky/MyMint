@@ -1,4 +1,4 @@
-package ledger
+package initialize
 
 import (
 	"github.com/dkaslovsky/MyMint/cmd/constants"

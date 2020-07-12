@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"github.com/dkaslovsky/MyMint/cmd/ledger/initialize"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +30,7 @@ func CreateLedgerCmd() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		CreateInitCmd(),
+		initialize.CreateInitCmd(),
 	)
 	return cmd
 }
