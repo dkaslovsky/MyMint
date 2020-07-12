@@ -1,22 +1,9 @@
 package ledger
 
 import (
+	"github.com/dkaslovsky/MyMint/cmd/ledger/dump"
 	"github.com/dkaslovsky/MyMint/cmd/ledger/initialize"
-	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/spf13/cobra"
-)
-
-var (
-	// table name for ledger
-	table = "ledger"
-	// table schema for ledger
-	schema = sqlite.Schema{
-		"id":          "INTEGER PRIMARY KEY",
-		"Category":    "TEXT",
-		"Date":        "TEXT",
-		"Amount":      "REAL",
-		"Description": "TEXT",
-	}
 )
 
 // CreateLedgerCmd generates the configuration for the ledger subcommand
@@ -31,6 +18,7 @@ func CreateLedgerCmd() *cobra.Command {
 	}
 	cmd.AddCommand(
 		initialize.CreateInitCmd(),
+		dump.CreateDumpCmd(),
 	)
 	return cmd
 }

@@ -25,7 +25,7 @@ func CreateInitCmd() *cobra.Command {
 			}
 			defer db.Close()
 
-			err = db.CreateTable(table, schema)
+			err = db.CreateTable(constants.TableName, constants.TableSchema)
 			if err != nil {
 				return err
 			}
