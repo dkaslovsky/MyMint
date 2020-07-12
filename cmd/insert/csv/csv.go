@@ -15,6 +15,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	// categoryMatchField is the field to use for assigning categories
+	categoryMatchField = "Description"
+	// categoryField is the field for an assigned category
+	categoryField = "Category"
+)
+
 // Options are options for configuring the csv command
 type Options struct {
 	Db     string
@@ -39,7 +46,6 @@ func CreateCsvCmd() *cobra.Command {
 			if ext == "" {
 				sourcePath += ".json"
 			}
-
 			ds, err := source.LoadDataSource(sourcePath)
 			if err != nil {
 				return err
@@ -64,21 +70,23 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 
-			/////////////////////////
-			catMap, err := category.LoadAutoCategories("./.mymint/keyword_categories.json")
+			catPath := filepath.Join(confDir, constants.KeywordCategoryFile)
+			keywordCatMap, err := category.LoadKeywordCatMap(catPath)
 			if err != nil {
 				return err
 			}
 			for _, row := range csvRows {
 				r := row.(goqu.Record)
-				cat, err := catMap.Apply(r, "Description")
+				r[categoryField] = nil
+				cat, err := keywordCatMap.Apply(r, categoryMatchField)
 				if err != nil {
 					return err
 				}
-				r["Category"] = cat
+				if cat != "" {
+					r[categoryField] = cat
+				}
 				fmt.Println(row)
 			}
-			/////////////////////////
 
 			db, err := sqlite.NewDb(opts.Db)
 			if err != nil {
