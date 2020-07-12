@@ -18,7 +18,7 @@ func CreateListCmd() *cobra.Command {
 		Short: "Subcommand for listing categories",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			confDir := os.Getenv(constants.ConfEnvVar)
-			path := filepath.Join(confDir, constants.CategoryFile)
+			path := filepath.Join(confDir, constants.ManualCategoryFile)
 			categories, err := category.LoadCategories(path)
 			if err != nil {
 				return err

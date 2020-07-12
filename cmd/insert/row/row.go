@@ -46,7 +46,7 @@ func CreateRowCmd() *cobra.Command {
 				return err
 			}
 
-			categoryPath := filepath.Join(confDir, constants.CategoryFile)
+			categoryPath := filepath.Join(confDir, constants.ManualCategoryFile)
 			categories, err := category.LoadCategories(categoryPath)
 			if err != nil {
 				return err
