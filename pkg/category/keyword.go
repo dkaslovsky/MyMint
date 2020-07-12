@@ -9,10 +9,12 @@ import (
 	"github.com/doug-martin/goqu/v9"
 )
 
-type AutoCategories map[string]string
+// KeywordCatMap is a mapping of description keywords to a category
+type KeywordCatMap map[string]string
 
-func LoadAutoCategories(path string) (c AutoCategories, err error) {
-	c = AutoCategories{}
+// LoadKeywordCatMap loads a KeywordCatMap from a file
+func LoadKeywordCatMap(path string) (c KeywordCatMap, err error) {
+	c = KeywordCatMap{}
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		return c, err
@@ -24,7 +26,8 @@ func LoadAutoCategories(path string) (c AutoCategories, err error) {
 	return c, nil
 }
 
-func (c AutoCategories) Apply(rec goqu.Record, matchField string) (category string, err error) {
+// Apply returns a category according to a matched keyword
+func (c KeywordCatMap) Apply(rec goqu.Record, matchField string) (category string, err error) {
 	toMatch, ok := rec[matchField].(string)
 	if !ok {
 		return category, fmt.Errorf("Record does not contain field [%s]", matchField)
