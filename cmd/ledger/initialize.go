@@ -1,4 +1,4 @@
-package initialize
+package ledger
 
 import (
 	"github.com/dkaslovsky/MyMint/cmd/constants"
@@ -16,8 +16,7 @@ func CreateInitCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "init",
-		Short: "Initialize a database with a ledger",
-		//Args:  cobra.ExactArgs(1),
+		Short: "Initialize a ledger",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			db, err := sqlite.NewDb(opts.Db)
@@ -42,16 +41,3 @@ func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
 	flags.StringVarP(&opts.Db, "database", "", constants.DefaultDb, "Name of database")
 }
-
-var (
-	// table name for ledger
-	table = "ledger"
-	// table schema for ledger
-	schema = sqlite.Schema{
-		"id":          "INTEGER PRIMARY KEY",
-		"Category":    "TEXT",
-		"Date":        "TEXT",
-		"Amount":      "REAL",
-		"Description": "TEXT",
-	}
-)

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/dkaslovsky/MyMint/cmd/initialize"
+	"github.com/dkaslovsky/MyMint/cmd/ledger"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +15,7 @@ func Run() error {
 		SilenceErrors: true,
 	}
 	cmd.AddCommand(
-		initialize.CreateInitCmd(),
+		ledger.CreateLedgerCmd(),
 	)
 	return cmd.Execute()
 }
