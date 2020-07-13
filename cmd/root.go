@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/dkaslovsky/MyMint/cmd/completion"
 	"github.com/dkaslovsky/MyMint/cmd/delete"
 	"github.com/dkaslovsky/MyMint/cmd/ledger"
 	"github.com/dkaslovsky/MyMint/cmd/source"
@@ -22,6 +23,7 @@ func Run() error {
 		source.CreateSourceCmd(),
 		delete.CreateDeleteCmd(),
 		table.CreateTableCmd(),
+		completion.CreateCompletionCmd(),
 	)
 	return cmd.Execute()
 }
