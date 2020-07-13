@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/dkaslovsky/MyMint/cmd/ledger"
+	"github.com/dkaslovsky/MyMint/cmd/source"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ func Run() error {
 	}
 	cmd.AddCommand(
 		ledger.CreateLedgerCmd(),
+		source.CreateSourceCmd(),
 	)
 	return cmd.Execute()
 }

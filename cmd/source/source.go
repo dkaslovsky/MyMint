@@ -6,12 +6,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CreateSourceCmd generates the configuration for the source subcommand.
-// It can be attached to any upstream cobra command
+// CreateSourceCmd generates the configuration for the source subcommand
 func CreateSourceCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "source",
-		Short: "Subcommand for source operations",
+		Short: "Subcommand for interacting with data source files",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cmd.Help()
 			return nil

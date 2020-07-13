@@ -5,13 +5,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/dkaslovsky/MyMint/cmd/constants"
+	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/dkaslovsky/MyMint/pkg/source"
 	"github.com/spf13/cobra"
 )
 
-// CreateCatCmd generates the configuration for the cat subcommand.
-// It can be attached to any upstream cobra command
+// CreateCatCmd generates the configuration for the cat subcommand
 func CreateCatCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cat",
@@ -19,8 +18,7 @@ func CreateCatCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			confDir := os.Getenv(constants.ConfEnvVar)
-			path := filepath.Join(confDir, constants.DataSourceDir, args[0])
+			path := filepath.Join(conf.GetDataSourcePath(), args[0])
 			ext := filepath.Ext(path)
 			if ext == "" {
 				path += ".json"

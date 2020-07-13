@@ -7,21 +7,18 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/dkaslovsky/MyMint/cmd/constants"
+	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/spf13/cobra"
 )
 
-// CreateListCmd generates the configuration for the list subcommand.
-// It can be attached to any upstream cobra command
+// CreateListCmd generates the configuration for the list subcommand
 func CreateListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ls",
 		Short: "List datasources",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			confDir := os.Getenv(constants.ConfEnvVar)
-			path := filepath.Join(confDir, constants.DataSourceDir)
-
+			path := conf.GetDataSourcePath()
 			fileInfo, err := os.Stat(path)
 			if err != nil {
 				return err
