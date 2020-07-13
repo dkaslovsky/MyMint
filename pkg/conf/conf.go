@@ -12,8 +12,8 @@ const (
 	DataSourceDir = "datasources"
 	// CategoryDir is the name of the directory where category files are stored
 	CategoryDir = "categories"
-	// ManualCategoryFile is the name of the file where manual categories are stored
-	ManualCategoryFile = "manual"
+	// LedgerCategoryFile is the name of the file where ledger categories are stored
+	LedgerCategoryFile = "ledger"
 	// KeywordCategoryFile is the name of the file where keyword categories are stored
 	KeywordCategoryFile = "keyword"
 )
@@ -26,9 +26,9 @@ func GetDataSourcePath() (path string) {
 	return filepath.Join(AppDir, DataSourceDir)
 }
 
-// GetManualCategoryPath returns the path to the manual category file
-func GetManualCategoryPath() (path string) {
-	return filepath.Join(AppDir, CategoryDir, ManualCategoryFile)
+// GetLedgerCategoryPath returns the path to the ledger category file
+func GetLedgerCategoryPath() (path string) {
+	return filepath.Join(AppDir, CategoryDir, LedgerCategoryFile)
 }
 
 // GetKeywordCategoryPath returns the path to the keyword category file

@@ -32,7 +32,7 @@ func CreateAddCmd() *cobra.Command {
 		Short: "Add an entry to the ledger",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			categories, err := category.LoadCategories(conf.GetManualCategoryPath())
+			categories, err := category.LoadCategories(conf.GetLedgerCategoryPath())
 			if err != nil {
 				return err
 			}

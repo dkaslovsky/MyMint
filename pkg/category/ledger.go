@@ -19,6 +19,9 @@ func LoadCategories(path string) (c Categories, err error) {
 
 	c = Categories{}
 	for _, category := range categories {
+		if category == "" {
+			continue
+		}
 		c[category] = struct{}{}
 	}
 	return c, err
