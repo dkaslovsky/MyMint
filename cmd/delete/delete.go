@@ -3,7 +3,6 @@ package delete
 import (
 	"log"
 
-	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/spf13/cobra"
 )
@@ -15,13 +14,12 @@ type Options struct {
 	IDCol string
 }
 
-// CreateDeleteCmd generates the configuration for the delete subcommand.
-// It can be attached to any upstream cobra command
+// CreateDeleteCmd generates the configuration for the delete subcommand
 func CreateDeleteCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "delete",
-		Short: "Delete a single row from commandline input",
+		Short: "Delete rows from a table",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
@@ -51,8 +49,8 @@ func CreateDeleteCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", constants.DefaultDb, "Name of database")
-	flags.StringVarP(&opts.IDCol, "id", "i", constants.DefaultIDColumn, "Name of id column")
+	flags.StringVarP(&opts.Db, "database", "d", sqlite.GetDbPath(), "Name of database")
+	flags.StringVarP(&opts.IDCol, "id", "i", "id", "Name of id column")
 	flags.StringVarP(&opts.Table, "table", "t", "", "table to delete from")
 	cobra.MarkFlagRequired(flags, "table")
 }
