@@ -3,9 +3,12 @@ package sqlite
 import (
 	"database/sql"
 	"fmt"
+	"path/filepath"
 	"strings"
 
+	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/doug-martin/goqu/v9"
+
 	// blank import for drivers
 	_ "github.com/doug-martin/goqu/v9/dialect/sqlite3"
 	_ "github.com/mattn/go-sqlite3"
@@ -20,6 +23,14 @@ const (
 	DbFloat   DbType = "REAL"
 	DbString  DbType = "TEXT"
 )
+
+// DefaultDb is the default sqlite database file
+const DefaultDb = "mymint.db"
+
+// GetDbPath returns the path to the database file
+func GetDbPath() (path string) {
+	return filepath.Join(conf.AppDir, DefaultDb)
+}
 
 // Db wraps goqu.Database to expose a Close method for the underlying database driver
 type Db struct {

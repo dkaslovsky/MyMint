@@ -4,12 +4,10 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"os"
-	"path/filepath"
 	"time"
 
-	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/category"
+	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/ledger"
 	"github.com/doug-martin/goqu/v9"
@@ -34,9 +32,7 @@ func CreateAddCmd() *cobra.Command {
 		Short: "Add an entry to the ledger",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			confDir := os.Getenv(constants.ConfEnvVar)
-			categoryPath := filepath.Join(confDir, constants.ManualCategoryFile)
-			categories, err := category.LoadCategories(categoryPath)
+			categories, err := category.LoadCategories(conf.GetManualCategoryPath())
 			if err != nil {
 				return err
 			}
@@ -90,7 +86,7 @@ func CreateAddCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "", constants.DefaultDb, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "", sqlite.GetDbPath(), "Name of database")
 	flags.StringVarP(&opts.Date, "date", "d", "", "Entry date")
 	flags.Float64VarP(&opts.Amount, "amount", "a", 0, "Entry amount in dollars")
 	flags.StringVarP(&opts.Description, "description", "r", "", "Entry description")

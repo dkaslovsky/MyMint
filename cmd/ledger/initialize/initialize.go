@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/ledger"
 	"github.com/spf13/cobra"
@@ -40,5 +39,5 @@ func CreateInitCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "", constants.DefaultDb, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "", sqlite.GetDbPath(), "Name of database")
 }
