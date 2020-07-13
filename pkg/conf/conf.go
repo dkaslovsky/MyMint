@@ -24,7 +24,7 @@ var AppDir = os.Getenv(ConfEnvVar)
 
 func init() {
 	if AppDir == "" {
-		log.Printf("WARNING: environment variable [$%s] is not set!", ConfEnvVar)
+		log.Fatalf("environment variable [%s] is not set!", ConfEnvVar)
 	}
 }
 
