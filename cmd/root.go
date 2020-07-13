@@ -4,6 +4,7 @@ import (
 	"github.com/dkaslovsky/MyMint/cmd/delete"
 	"github.com/dkaslovsky/MyMint/cmd/ledger"
 	"github.com/dkaslovsky/MyMint/cmd/source"
+	"github.com/dkaslovsky/MyMint/cmd/table"
 	"github.com/spf13/cobra"
 )
 
@@ -20,6 +21,7 @@ func Run() error {
 		ledger.CreateLedgerCmd(),
 		source.CreateSourceCmd(),
 		delete.CreateDeleteCmd(),
+		table.CreateTableCmd(),
 	)
 	return cmd.Execute()
 }

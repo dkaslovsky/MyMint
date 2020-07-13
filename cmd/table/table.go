@@ -2,12 +2,11 @@ package table
 
 import (
 	"github.com/dkaslovsky/MyMint/cmd/table/create"
-	"github.com/dkaslovsky/MyMint/cmd/table/dump"
+	"github.com/dkaslovsky/MyMint/cmd/table/csv"
 	"github.com/spf13/cobra"
 )
 
-// CreateTableCmd generates the configuration for the table subcommand.
-// It can be attached to any upstream cobra command
+// CreateTableCmd generates the configuration for the table subcommand
 func CreateTableCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "table",
@@ -18,8 +17,8 @@ func CreateTableCmd() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		dump.CreateDumpCmd(),
 		create.CreateCreateCmd(),
+		csv.CreateCsvCmd(),
 	)
 	return cmd
 }

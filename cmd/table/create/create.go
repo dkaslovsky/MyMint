@@ -1,10 +1,9 @@
 package create
 
 import (
-	"os"
 	"path/filepath"
 
-	"github.com/dkaslovsky/MyMint/cmd/constants"
+	"github.com/dkaslovsky/MyMint/pkg/conf"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
 	"github.com/dkaslovsky/MyMint/pkg/source"
 	"github.com/spf13/cobra"
@@ -15,24 +14,22 @@ type Options struct {
 	Db string
 }
 
-// CreateCreateCmd generates the configuration for the create subcommand.
-// It can be attached to any upstream cobra command
+// CreateCreateCmd generates the configuration for the create subcommand
 func CreateCreateCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create a table from a datasource definition",
+		Short: "Create a new table from a datasource",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			confDir := os.Getenv(constants.ConfEnvVar)
-			sourcePath := filepath.Join(confDir, constants.DataSourceDir, args[0])
-			ext := filepath.Ext(sourcePath)
+			path := filepath.Join(conf.GetDataSourcePath(), args[0])
+			ext := filepath.Ext(path)
 			if ext == "" {
-				sourcePath += ".json"
+				path += ".json"
 			}
 
-			ds, err := source.LoadDataSource(sourcePath)
+			ds, err := source.LoadDataSource(path)
 			if err != nil {
 				return err
 			}
@@ -57,5 +54,5 @@ func CreateCreateCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", constants.DefaultDb, "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", sqlite.GetDbPath(), "Name of database")
 }
