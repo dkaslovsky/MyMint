@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -20,6 +21,12 @@ const (
 
 // AppDir is the directory containing files neccessary for the application to run
 var AppDir = os.Getenv(ConfEnvVar)
+
+func init() {
+	if AppDir == "" {
+		log.Printf("WARNING: environment variable [$%s] is not set!", ConfEnvVar)
+	}
+}
 
 // GetDataSourcePath returns the path to the datasource files
 func GetDataSourcePath() (path string) {
