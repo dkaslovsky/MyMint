@@ -2,10 +2,10 @@ package dump
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
+	"github.com/dkaslovsky/MyMint/pkg/ledger"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +29,7 @@ func CreateDumpCmd() *cobra.Command {
 			defer db.Close()
 
 			scanner, err := db.
-				From(constants.TableName).
+				From(ledger.TableName).
 				Executor().
 				Scanner()
 			if err != nil {
@@ -38,7 +38,7 @@ func CreateDumpCmd() *cobra.Command {
 			defer scanner.Close()
 
 			for scanner.Next() {
-				r := &row{}
+				r := &ledger.Row{}
 				err = scanner.ScanStruct(r)
 				if err != nil {
 					return err
@@ -61,23 +61,4 @@ func CreateDumpCmd() *cobra.Command {
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
 	flags.StringVarP(&opts.Db, "database", "", constants.DefaultDb, "Name of database")
-}
-
-type row struct {
-	ID          int64       `db:"id"`
-	Date        string      `db:"Date"`
-	Amount      float64     `db:"Amount"`
-	Description string      `db:"Description"`
-	Category    interface{} `db:"Category"`
-}
-
-func (r *row) String() (s string) {
-	fields := []string{
-		fmt.Sprintf("ID: %d", r.ID),
-		fmt.Sprintf("Date: %s", r.Date),
-		fmt.Sprintf("Amount: %f", r.Amount),
-		fmt.Sprintf("Description: %s", r.Description),
-		fmt.Sprintf("Category: %v", r.Category),
-	}
-	return strings.Join(fields, " | ")
 }

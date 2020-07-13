@@ -3,6 +3,7 @@ package initialize
 import (
 	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
+	"github.com/dkaslovsky/MyMint/pkg/ledger"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,7 @@ func CreateInitCmd() *cobra.Command {
 			}
 			defer db.Close()
 
-			err = db.CreateTable(constants.TableName, constants.TableSchema)
+			err = db.CreateTable(ledger.TableName, ledger.TableSchema)
 			if err != nil {
 				return err
 			}

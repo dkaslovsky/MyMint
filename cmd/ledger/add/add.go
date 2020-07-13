@@ -6,10 +6,12 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/dkaslovsky/MyMint/cmd/constants"
 	"github.com/dkaslovsky/MyMint/pkg/category"
 	"github.com/dkaslovsky/MyMint/pkg/db/sqlite"
+	"github.com/dkaslovsky/MyMint/pkg/ledger"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/spf13/cobra"
 )
@@ -65,12 +67,19 @@ func CreateAddCmd() *cobra.Command {
 				return err
 			}
 			defer db.Close()
-			_, id, err := db.InsertRows(constants.TableName, []interface{}{row})
+
+			_, id, err := db.InsertRows(ledger.TableName, []interface{}{row})
 			if err != nil {
 				return err
 			}
 
-			log.Printf("Inserted row with id [%d]", id)
+			log.Printf("Inserted row: %v", &ledger.Row{
+				ID:          id,
+				Date:        opts.Date,
+				Amount:      amount,
+				Description: opts.Description,
+				Category:    category,
+			})
 			return nil
 
 		},
@@ -91,13 +100,16 @@ func attachOpts(cmd *cobra.Command, opts *Options) {
 	cmd.MarkFlagRequired("amount")
 }
 
-func validateDate(date string) (err error) {
-	return nil
-}
-
 func setAmountSign(amount float64, positive bool) (signedAmount float64) {
 	if positive {
 		return math.Abs(amount)
 	}
 	return -1 * math.Abs(amount)
+}
+
+const rfc3339FullDate = "2006-01-02"
+
+func validateDate(date string) (err error) {
+	_, err = time.Parse(rfc3339FullDate, date)
+	return err
 }
