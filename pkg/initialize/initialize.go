@@ -17,32 +17,38 @@ func Initialize(dbPath string) (err error) {
 		return fmt.Errorf("Cannot initialize: directory [%s] already exists", conf.Config.AppDir)
 	}
 
+	// create top level directory
 	err = os.MkdirAll(conf.Config.AppDir, 0755)
 	if err != nil {
 		return err
 	}
 
+	// create datasource subdir
 	err = os.MkdirAll(conf.Config.DataSourcePath, 0755)
 	if err != nil {
 		return err
 	}
 
+	// create category subdir
 	err = os.MkdirAll(conf.Config.CategoryPath, 0755)
 	if err != nil {
 		return err
 	}
 
+	// write empty ledger category file
 	fileHandle, err := os.OpenFile(conf.Config.LedgerCategoryFilePath, os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
 	fileHandle.Close()
 
+	// write keyword category file with empty json
 	err = ioutil.WriteFile(conf.Config.KeywordCategoryFilePath, []byte("{}"), 0644)
 	if err != nil {
 		return err
 	}
 
+	// create db and ledger table
 	db, err := sqlite.NewDb(dbPath)
 	if err != nil {
 		return err
