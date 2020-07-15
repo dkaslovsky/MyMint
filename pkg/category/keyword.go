@@ -26,8 +26,8 @@ func LoadKeywordCatMap(path string) (c KeywordCatMap, err error) {
 	return c, nil
 }
 
-// Apply returns a category according to a matched keyword
-func (c KeywordCatMap) Apply(rec goqu.Record, matchField string) (category string, err error) {
+// GetFromRecord returns a category according to a matched keyword
+func (c KeywordCatMap) GetFromRecord(rec goqu.Record, matchField string) (category string, err error) {
 	toMatch, ok := rec[matchField].(string)
 	if !ok {
 		return category, fmt.Errorf("Record does not contain field [%s]", matchField)

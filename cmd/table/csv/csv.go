@@ -77,7 +77,7 @@ func CreateCsvCmd() *cobra.Command {
 			for _, row := range csvRows {
 				r := row.(goqu.Record)
 				r[categoryField] = nil
-				cat, err := keywordCatMap.Apply(r, categoryMatchField)
+				cat, err := keywordCatMap.GetFromRecord(r, categoryMatchField)
 				if err != nil {
 					return err
 				}
