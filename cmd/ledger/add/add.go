@@ -32,7 +32,7 @@ func CreateAddCmd() *cobra.Command {
 		Short: "Add an entry to the ledger",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			categories, err := category.LoadCategories(conf.GetLedgerCategoryPath())
+			categories, err := category.LoadCategories(conf.Config.LedgerCategoryPath)
 			if err != nil {
 				return err
 			}
@@ -86,7 +86,7 @@ func CreateAddCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "", sqlite.GetDbPath(), "Name of database")
+	flags.StringVarP(&opts.Db, "database", "", conf.Config.DefaultSqliteDbPath, "Name of database")
 	flags.StringVarP(&opts.Date, "date", "d", "", "Entry date")
 	flags.Float64VarP(&opts.Amount, "amount", "a", 0, "Entry amount in dollars")
 	flags.StringVarP(&opts.Description, "description", "r", "", "Entry description")

@@ -40,7 +40,7 @@ func CreateCsvCmd() *cobra.Command {
 
 			csvPath := args[0]
 
-			sourcePath := filepath.Join(conf.GetDataSourcePath(), opts.Source)
+			sourcePath := filepath.Join(conf.Config.DataSourcePath, opts.Source)
 			ext := filepath.Ext(sourcePath)
 			if ext == "" {
 				sourcePath += ".json"
@@ -70,8 +70,7 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 
-			catPath := conf.GetKeywordCategoryPath()
-			keywordCatMap, err := category.LoadKeywordCatMap(catPath)
+			keywordCatMap, err := category.LoadKeywordCatMap(conf.Config.KeywordCategoryPath)
 			if err != nil {
 				return err
 			}
@@ -108,7 +107,7 @@ func CreateCsvCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", sqlite.GetDbPath(), "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", conf.Config.DefaultSqliteDbPath, "Name of database")
 	flags.StringVarP(&opts.Source, "source", "s", "", "Path to datasource definition file")
 	cobra.MarkFlagRequired(flags, "source")
 }

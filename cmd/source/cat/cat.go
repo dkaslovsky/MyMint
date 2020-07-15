@@ -18,7 +18,7 @@ func CreateCatCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			path := filepath.Join(conf.GetDataSourcePath(), args[0])
+			path := filepath.Join(conf.Config.DataSourcePath, args[0])
 			ext := filepath.Ext(path)
 			if ext == "" {
 				path += ".json"

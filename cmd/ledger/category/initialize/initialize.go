@@ -13,7 +13,7 @@ func CreateInitCmd() *cobra.Command {
 		Use:   "init",
 		Short: "Create ledger categories file",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			path := conf.GetLedgerCategoryPath()
+			path := conf.Config.LedgerCategoryPath
 			fileHandle, err := os.OpenFile(path, os.O_CREATE, 0644)
 			if err != nil {
 				return err

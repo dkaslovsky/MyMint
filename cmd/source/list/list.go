@@ -18,7 +18,7 @@ func CreateListCmd() *cobra.Command {
 		Short: "List datasources",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			path := conf.GetDataSourcePath()
+			path := conf.Config.DataSourcePath
 			fileInfo, err := os.Stat(path)
 			if err != nil {
 				return err

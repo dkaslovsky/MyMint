@@ -23,7 +23,7 @@ func CreateCreateCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			path := filepath.Join(conf.GetDataSourcePath(), args[0])
+			path := filepath.Join(conf.Config.DataSourcePath, args[0])
 			ext := filepath.Ext(path)
 			if ext == "" {
 				path += ".json"
@@ -54,5 +54,5 @@ func CreateCreateCmd() *cobra.Command {
 
 func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags := cmd.Flags()
-	flags.StringVarP(&opts.Db, "database", "d", sqlite.GetDbPath(), "Name of database")
+	flags.StringVarP(&opts.Db, "database", "d", conf.Config.DefaultSqliteDbPath, "Name of database")
 }

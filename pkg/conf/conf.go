@@ -7,38 +7,44 @@ import (
 )
 
 const (
-	// ConfEnvVar is the environment variable for the path to configuration files
-	ConfEnvVar = "MYMINT_CONF_DIR"
-	// DataSourceDir is the name of the directory where datasource files are stored
-	DataSourceDir = "datasources"
-	// CategoryDir is the name of the directory where category files are stored
-	CategoryDir = "categories"
-	// LedgerCategoryFile is the name of the file where ledger categories are stored
-	LedgerCategoryFile = "ledger"
-	// KeywordCategoryFile is the name of the file where keyword categories are stored
-	KeywordCategoryFile = "keyword"
+	// confEnvVar is the environment variable for the path to configuration files
+	confEnvVar = "MYMINT_CONF_DIR"
+	// dataSourceDir is the name of the directory where datasource files are stored
+	dataSourceDir = "datasources"
+	// categoryDir is the name of the directory where category files are stored
+	categoryDir = "categories"
+	// ledgerCategoryFile is the name of the file where ledger categories are stored
+	ledgerCategoryFile = "ledger"
+	// keywordCategoryFile is the name of the file where keyword categories are stored
+	keywordCategoryFile = "keyword"
+	// defaultSqliteDb is the name of the default sqlite database file
+	defaultSqliteDb = "mymint.db"
 )
 
-// AppDir is the directory containing files neccessary for the application to run
-var AppDir = os.Getenv(ConfEnvVar)
+// appDir is the directory containing files neccessary for the application to run
+var appDir = os.Getenv(confEnvVar)
 
 func init() {
-	if AppDir == "" {
-		log.Fatalf("environment variable [%s] is not set!", ConfEnvVar)
+	if appDir == "" {
+		log.Fatalf("environment variable [%s] is not set!", confEnvVar)
 	}
 }
 
-// GetDataSourcePath returns the path to the datasource files
-func GetDataSourcePath() (path string) {
-	return filepath.Join(AppDir, DataSourceDir)
+type config struct {
+	// dataSourcePath is the path to the datasource files
+	DataSourcePath string
+	// ledgerCategoryPath is the path to the ledger category file
+	LedgerCategoryPath string
+	// keywordCategoryPath is the path to the keyword category file
+	KeywordCategoryPath string
+	// DefaultSqliteDbPath is the path to the database file using the default name
+	DefaultSqliteDbPath string
 }
 
-// GetLedgerCategoryPath returns the path to the ledger category file
-func GetLedgerCategoryPath() (path string) {
-	return filepath.Join(AppDir, CategoryDir, LedgerCategoryFile)
-}
-
-// GetKeywordCategoryPath returns the path to the keyword category file
-func GetKeywordCategoryPath() (path string) {
-	return filepath.Join(AppDir, CategoryDir, KeywordCategoryFile)
+// Config is the configuration necessary to run the application
+var Config = config{
+	DataSourcePath:      filepath.Join(appDir, dataSourceDir),
+	LedgerCategoryPath:  filepath.Join(appDir, categoryDir, ledgerCategoryFile),
+	KeywordCategoryPath: filepath.Join(appDir, categoryDir, keywordCategoryFile),
+	DefaultSqliteDbPath: filepath.Join(appDir, defaultSqliteDb),
 }

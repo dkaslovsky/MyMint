@@ -15,7 +15,7 @@ func CreateDeleteCmd() *cobra.Command {
 		Short: "Delete a category from the ledger categories",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			path := conf.GetLedgerCategoryPath()
+			path := conf.Config.LedgerCategoryPath
 			categories, err := category.LoadCategories(path)
 			if err != nil {
 				return err
