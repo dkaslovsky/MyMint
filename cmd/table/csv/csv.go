@@ -70,7 +70,7 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 
-			keywordCatMap, err := category.LoadKeywordCatMap(conf.Config.KeywordCategoryPath)
+			keywordCatMap, err := category.LoadKeywordCatMap(conf.Config.KeywordCategoryFilePath)
 			if err != nil {
 				return err
 			}

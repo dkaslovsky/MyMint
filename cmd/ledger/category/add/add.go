@@ -15,7 +15,7 @@ func CreateAddCmd() *cobra.Command {
 		Short: "Add a category to the ledger categories",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			path := conf.Config.LedgerCategoryPath
+			path := conf.Config.LedgerCategoryFilePath
 			categories, err := category.LoadCategories(path)
 			if err != nil {
 				return err

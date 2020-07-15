@@ -31,20 +31,26 @@ func init() {
 }
 
 type config struct {
-	// dataSourcePath is the path to the datasource files
+	// AppDir is the directory containing files neccessary for the application to run
+	AppDir string
+	// DataSourcePath is the path to the datasource files
 	DataSourcePath string
-	// ledgerCategoryPath is the path to the ledger category file
-	LedgerCategoryPath string
-	// keywordCategoryPath is the path to the keyword category file
-	KeywordCategoryPath string
+	// CategoryPath is the path to the category files
+	CategoryPath string
+	// LedgerCategoryFilePath is the path to the ledger category file
+	LedgerCategoryFilePath string
+	// KeywordCategoryFilePath is the path to the keyword category file
+	KeywordCategoryFilePath string
 	// DefaultSqliteDbPath is the path to the database file using the default name
 	DefaultSqliteDbPath string
 }
 
 // Config is the configuration necessary to run the application
 var Config = config{
-	DataSourcePath:      filepath.Join(appDir, dataSourceDir),
-	LedgerCategoryPath:  filepath.Join(appDir, categoryDir, ledgerCategoryFile),
-	KeywordCategoryPath: filepath.Join(appDir, categoryDir, keywordCategoryFile),
-	DefaultSqliteDbPath: filepath.Join(appDir, defaultSqliteDb),
+	AppDir:                  appDir,
+	DataSourcePath:          filepath.Join(appDir, dataSourceDir),
+	CategoryPath:            filepath.Join(appDir, categoryDir),
+	LedgerCategoryFilePath:  filepath.Join(appDir, categoryDir, ledgerCategoryFile),
+	KeywordCategoryFilePath: filepath.Join(appDir, categoryDir, keywordCategoryFile),
+	DefaultSqliteDbPath:     filepath.Join(appDir, defaultSqliteDb),
 }

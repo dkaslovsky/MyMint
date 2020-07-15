@@ -14,7 +14,7 @@ func CreateListCmd() *cobra.Command {
 		Use:   "ls",
 		Short: "List the ledger categories",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			path := conf.Config.LedgerCategoryPath
+			path := conf.Config.LedgerCategoryFilePath
 			categories, err := category.LoadCategories(path)
 			if err != nil {
 				return err
