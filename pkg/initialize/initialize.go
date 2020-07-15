@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/dkaslovsky/MyMint/pkg/conf"
@@ -10,7 +11,7 @@ import (
 )
 
 // Initialize creates the mymint data directory, subdirectories, and database with an empty ledger table
-func Initialize(dbName string) (err error) {
+func Initialize(dbPath string) (err error) {
 	_, err = os.Stat(conf.Config.AppDir)
 	if !os.IsNotExist(err) {
 		return fmt.Errorf("Cannot initialize: directory [%s] already exists", conf.Config.AppDir)
@@ -37,18 +38,16 @@ func Initialize(dbName string) (err error) {
 	}
 	fileHandle.Close()
 
-	fileHandle, err = os.OpenFile(conf.Config.KeywordCategoryFilePath, os.O_CREATE, 0644)
+	err = ioutil.WriteFile(conf.Config.KeywordCategoryFilePath, []byte("{}"), 0644)
 	if err != nil {
 		return err
 	}
-	fileHandle.Close()
 
-	db, err := sqlite.NewDb(dbName)
+	db, err := sqlite.NewDb(dbPath)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
-
 	err = db.CreateTable(ledger.TableName, ledger.TableSchema)
 	if err != nil {
 		return err
