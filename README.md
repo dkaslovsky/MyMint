@@ -73,6 +73,42 @@ First, add a JSON file to the `$MYMINT_CONF_DIR/datasources/` directory.  The JS
   }
 }
 ```
+Then create a table using this configuration:
+```
+mymint table create <datasource_filename>
+```
+Transactions can then be added from a CSV file:
+```
+mymint table csv -s <datasource_filename> path/to/file.csv
+```
 
 ## Categories
-Description coming here
+### Ledger Categories
+```
+$ mymint ledger category
+Interact with ledger categories
+
+Usage:
+  mymint ledger category [flags]
+  mymint ledger category [command]
+
+Available Commands:
+  add         Add a category to the ledger categories
+  delete      Delete a category from the ledger categories
+  ls          List the ledger categories
+```
+Ledger categories must be added before a category can be applied to a transaction.  As all ledger transactions are manually added, an associated category is manually specified when using the `ledger add` subcommand.
+
+### Datasource Categories
+Categories are automatically added to non-ledger datasources when using the `table csv` subcommand.  Specify a mapping of a keyword substring from the `Description` field of the CSV to the desired category in the JSON file `$MYMINT_CONF_DIR/categories/keyword`.  For example:
+```
+$ cat $MYMINT_CONF_DIR/categories/keyword
+{
+  "netflix": "entertainment",
+  "hbo": "entertainment",
+  "gym": "membership",
+  "kroger": "food",
+  "costco": "food",
+  ...
+}
+```
