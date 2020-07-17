@@ -10,7 +10,7 @@ import (
 func CreateSourceCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "source",
-		Short: "Interact with datasource files",
+		Short: "Datasource file operations",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cmd.Help()
 			return nil
