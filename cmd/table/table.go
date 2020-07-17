@@ -10,7 +10,7 @@ import (
 func CreateTableCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "table",
-		Short: "Subcommand for table operations",
+		Short: "Table operations",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cmd.Help()
 			return nil

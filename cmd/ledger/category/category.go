@@ -11,7 +11,7 @@ import (
 func CreateCategoryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "category",
-		Short: "Subcommand for interacting with ledger categories",
+		Short: "Interact with ledger categories",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cmd.Help()
 			return nil

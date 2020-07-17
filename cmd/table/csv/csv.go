@@ -34,7 +34,7 @@ func CreateCsvCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "csv",
-		Short: "Persist records from a csv file",
+		Short: "Persist records from a csv file to a table",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 

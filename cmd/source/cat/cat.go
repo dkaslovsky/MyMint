@@ -14,7 +14,7 @@ import (
 func CreateCatCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cat",
-		Short: "print a datasource file to the console",
+		Short: "Print a datasource file to the console",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 

@@ -19,7 +19,7 @@ func CreateDumpCmd() *cobra.Command {
 	opts := Options{}
 	cmd := &cobra.Command{
 		Use:   "dump",
-		Short: "Prints the ledger to the console",
+		Short: "Print the ledger to the console",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			db, err := sqlite.NewDb(opts.Db)

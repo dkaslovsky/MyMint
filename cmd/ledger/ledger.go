@@ -11,7 +11,7 @@ import (
 func CreateLedgerCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ledger",
-		Short: "Subcommand for interacting with the ledger",
+		Short: "Interact with the ledger",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cmd.Help()
 			return nil
