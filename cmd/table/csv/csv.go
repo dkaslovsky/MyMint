@@ -16,13 +16,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	// categoryMatchField is the field to use for assigning categories
-	categoryMatchField = "Description"
-	// categoryField is the field for an assigned category
-	categoryField = "Category"
-)
-
 // Options are options for configuring the csv command
 type Options struct {
 	Db     string
@@ -76,13 +69,13 @@ func CreateCsvCmd() *cobra.Command {
 			}
 			for _, row := range csvRows {
 				r := row.(goqu.Record)
-				r[categoryField] = nil
-				cat, err := keywordCatMap.GetFromRecord(r, categoryMatchField)
+				r[ds.CategoryField] = nil
+				cat, err := keywordCatMap.GetFromRecord(r, ds.CategoryMatchField)
 				if err != nil {
 					return err
 				}
 				if cat != "" {
-					r[categoryField] = cat
+					r[ds.CategoryField] = cat
 				}
 				fmt.Println(row)
 			}

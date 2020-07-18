@@ -17,10 +17,15 @@ type DataSource struct {
 	Name   string        `json:"name"`
 	Table  string        `json:"table"`
 	Schema sqlite.Schema `json:"schema"`
-	Csv    struct {
+
+	Csv struct {
 		Fields []string `json:"fields"`
 		Header bool     `json:"header"`
 	} `json:"csv"`
+
+	// CategoryMatchField is the field to use for assigning categories to the CategoryField
+	CategoryMatchField string `json:"categoryMatchField"`
+	CategoryField      string `json:"categoryField"`
 }
 
 // LoadDataSource unmarshals a JSON definition for a datasource from a file
