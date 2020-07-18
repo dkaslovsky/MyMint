@@ -2,6 +2,7 @@ package delete
 
 import (
 	"log"
+	"strings"
 
 	"github.com/dkaslovsky/MyMint/pkg/category"
 	"github.com/dkaslovsky/MyMint/pkg/conf"
@@ -20,7 +21,7 @@ func CreateDeleteCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			key := args[0]
+			key := strings.ToLower(args[0])
 			if !categories.Contains(key) {
 				log.Printf("[%s] not in categories, nothing to do", key)
 				return nil

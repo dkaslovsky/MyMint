@@ -2,6 +2,7 @@ package add
 
 import (
 	"log"
+	"strings"
 
 	"github.com/dkaslovsky/MyMint/pkg/category"
 	"github.com/dkaslovsky/MyMint/pkg/conf"
@@ -27,17 +28,20 @@ func CreateAddCmd() *cobra.Command {
 				return err
 			}
 
-			if categories.Contains(opts.Key) {
-				log.Printf("key [%s] already in categories, delete and re-add to change the value", opts.Key)
+			key := strings.ToLower(opts.Key)
+			val := strings.ToLower(opts.Val)
+
+			if categories.Contains(key) {
+				log.Printf("key [%s] already in categories, delete and re-add to change the value", key)
 				return nil
 			}
-			categories.Add(opts.Key, opts.Val)
+			categories.Add(key, val)
 			err = categories.Write(path)
 			if err != nil {
 				log.Printf("error writing categories, check contents of file [%s] manually", path)
 				return err
 			}
-			log.Printf("added [%s: %s] to categories", opts.Key, opts.Val)
+			log.Printf("added [%s: %s] to categories", key, val)
 			return nil
 		},
 	}
