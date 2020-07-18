@@ -32,7 +32,7 @@ func CreateAddCmd() *cobra.Command {
 		Short: "Add an entry to the ledger",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			categories, err := category.LoadCategories(conf.Config.LedgerCategoryFilePath)
+			categories, err := category.LoadLedgerCategories(conf.Config.LedgerCategoryFilePath)
 			if err != nil {
 				return err
 			}
@@ -91,7 +91,7 @@ func attachOpts(cmd *cobra.Command, opts *Options) {
 	flags.Float64VarP(&opts.Amount, "amount", "a", 0, "Entry amount in dollars")
 	flags.StringVarP(&opts.Description, "description", "r", "", "Entry description")
 	flags.StringVarP(&opts.Category, "category", "c", "", "Entry category")
-	flags.BoolVarP(&opts.Positive, "positive", "p", false, "Entry amount is positive dollar value")
+	flags.BoolVarP(&opts.Positive, "positive", "p", false, "Entry amount is positive dollar value (default false)")
 	cmd.MarkFlagRequired("date")
 	cmd.MarkFlagRequired("amount")
 }

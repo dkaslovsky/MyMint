@@ -1,4 +1,4 @@
-package cat
+package dump
 
 import (
 	"fmt"
@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CreateCatCmd generates the configuration for the cat subcommand
-func CreateCatCmd() *cobra.Command {
+// CreateDumpCmd generates the configuration for the dump subcommand
+func CreateDumpCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "cat",
+		Use:   "dump",
 		Short: "Print a datasource file to the console",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

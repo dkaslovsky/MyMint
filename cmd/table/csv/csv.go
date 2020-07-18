@@ -1,7 +1,6 @@
 package csv
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -63,7 +62,7 @@ func CreateCsvCmd() *cobra.Command {
 				return err
 			}
 
-			keywordCatMap, err := category.LoadKeywordCatMap(conf.Config.KeywordCategoryFilePath)
+			keywordCatMap, err := category.LoadKeywordCategories(conf.Config.KeywordCategoryFilePath)
 			if err != nil {
 				return err
 			}
@@ -77,7 +76,6 @@ func CreateCsvCmd() *cobra.Command {
 				if cat != "" {
 					r[ds.CategoryField] = cat
 				}
-				fmt.Println(row)
 			}
 
 			db, err := sqlite.NewDb(opts.Db)

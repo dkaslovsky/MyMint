@@ -12,10 +12,10 @@ import (
 func CreateListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ls",
-		Short: "List the ledger categories",
+		Short: "List the keyword category mapping",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			path := conf.Config.LedgerCategoryFilePath
-			categories, err := category.LoadLedgerCategories(path)
+			path := conf.Config.KeywordCategoryFilePath
+			categories, err := category.LoadKeywordCategories(path)
 			if err != nil {
 				return err
 			}

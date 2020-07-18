@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-// Categories contains string categories
-type Categories map[string]struct{}
+// LedgerCategories contains string categories
+type LedgerCategories map[string]struct{}
 
-// LoadCategories reads strings from a newline delimited file
-func LoadCategories(path string) (c Categories, err error) {
+// LoadLedgerCategories reads strings from a newline delimited file
+func LoadLedgerCategories(path string) (c LedgerCategories, err error) {
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		return c, err
 	}
 	categories := strings.Split(string(bytes), "\n")
 
-	c = Categories{}
+	c = LedgerCategories{}
 	for _, category := range categories {
 		if category == "" {
 			continue
@@ -27,29 +27,29 @@ func LoadCategories(path string) (c Categories, err error) {
 	return c, err
 }
 
-// Contains evaluates whether Categories contains a specified string
-func (c Categories) Contains(category string) bool {
+// Contains evaluates whether LedgerCategories contains a specified string
+func (c LedgerCategories) Contains(category string) bool {
 	_, found := c[category]
 	return found
 }
 
-// Add adds a string to Categories and functions as a no-op if the string already exists
-func (c Categories) Add(category string) {
+// Add adds a string to LedgerCategories and functions as a no-op if the string already exists
+func (c LedgerCategories) Add(category string) {
 	c[category] = struct{}{}
 }
 
-// Delete deletes a string from Categories and is a no-op if the string does not exist
-func (c Categories) Delete(category string) {
+// Delete deletes a string from LedgerCategories and is a no-op if the string does not exist
+func (c LedgerCategories) Delete(category string) {
 	delete(c, category)
 }
 
-// Write writes the string representation of Categories to a file
-func (c Categories) Write(path string) (err error) {
+// Write writes the string representation of LedgerCategories to a file
+func (c LedgerCategories) Write(path string) (err error) {
 	bytes := []byte(c.String())
 	return ioutil.WriteFile(path, bytes, 0644)
 }
 
-func (c Categories) String() (s string) {
+func (c LedgerCategories) String() (s string) {
 	categories := []string{}
 	for category := range c {
 		categories = append(categories, category)

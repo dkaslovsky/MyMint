@@ -9,12 +9,12 @@ import (
 	"github.com/doug-martin/goqu/v9"
 )
 
-// KeywordCatMap is a mapping of description keywords to a category
-type KeywordCatMap map[string]string
+// KeywordCategories is a mapping of description keywords to a category
+type KeywordCategories map[string]string
 
-// LoadKeywordCatMap loads a KeywordCatMap from a file
-func LoadKeywordCatMap(path string) (c KeywordCatMap, err error) {
-	c = KeywordCatMap{}
+// LoadKeywordCategories loads a KeywordCatMap from a file
+func LoadKeywordCategories(path string) (c KeywordCategories, err error) {
+	c = KeywordCategories{}
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		return c, err
@@ -27,7 +27,7 @@ func LoadKeywordCatMap(path string) (c KeywordCatMap, err error) {
 }
 
 // GetFromRecord returns a category according to a matched keyword
-func (c KeywordCatMap) GetFromRecord(rec goqu.Record, matchField string) (category string, err error) {
+func (c KeywordCategories) GetFromRecord(rec goqu.Record, matchField string) (category string, err error) {
 	toMatch, ok := rec[matchField].(string)
 	if !ok {
 		return category, fmt.Errorf("Record does not contain field [%s]", matchField)
@@ -39,4 +39,31 @@ func (c KeywordCatMap) GetFromRecord(rec goqu.Record, matchField string) (catego
 		}
 	}
 	return "", nil
+}
+
+// Contains evaluates whether KeywordCategories contains a specified key
+func (c KeywordCategories) Contains(key string) bool {
+	_, found := c[key]
+	return found
+}
+
+// Add adds a key/value pair to KeywordCategories (overwriting an existing key/value pair)
+func (c KeywordCategories) Add(key string, val string) {
+	c[key] = val
+}
+
+// Delete deletes a key from KeywordCategories and is a no-op if the key does not exist
+func (c KeywordCategories) Delete(key string) {
+	delete(c, key)
+}
+
+// Write writes the string representation of KeywordCategories to a file
+func (c KeywordCategories) Write(path string) (err error) {
+	bytes := []byte(c.String())
+	return ioutil.WriteFile(path, bytes, 0644)
+}
+
+func (c KeywordCategories) String() (s string) {
+	bytes, _ := json.MarshalIndent(c, "", "\t") // safe to ignore err since struct came from json
+	return string(bytes)
 }

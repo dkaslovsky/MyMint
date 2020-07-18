@@ -1,7 +1,8 @@
 package source
 
 import (
-	"github.com/dkaslovsky/MyMint/cmd/source/cat"
+	"github.com/dkaslovsky/MyMint/cmd/source/category"
+	"github.com/dkaslovsky/MyMint/cmd/source/dump"
 	"github.com/dkaslovsky/MyMint/cmd/source/list"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +19,8 @@ func CreateSourceCmd() *cobra.Command {
 	}
 	cmd.AddCommand(
 		list.CreateListCmd(),
-		cat.CreateCatCmd(),
+		dump.CreateDumpCmd(),
+		category.CreateCategoryCmd(),
 	)
 	return cmd
 }
