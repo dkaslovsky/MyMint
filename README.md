@@ -55,19 +55,21 @@ In addition to the ledger, MyMint can track any datasource (e.g., credit card tr
 First, add a JSON file to the `$MYMINT_CONF_DIR/datasources/` directory.  The JSON file specification follows:
 ```
 {
-  "name": "datasource_name",
-  "table": "name_of_table",
+  "name": <datasource name>,
+  "table": <table name>,
   "schema": {
     "id": "INTEGER PRIMARY KEY",
-    "field1": "SQLITE3 TYPE",
-    "field2": "SQLITE3 TYPE",
+    <field1>: <SQLITE3 TYPE>,
+    <field3>: <SQLITE3 TYPE>,
     ...
   },
+  "categoryMatchField": <field to match substrings for category assignment>,
+  "categoryField": <field to use for assigned categories>,
   "csv": {
     "header": <boolean indicating presence of CSV header>,
     "fields": [
-      "CSV_field1",
-      "CSV_field2",
+      <CSV_field1>,
+      <CSV_field2>,
       ...
     ]
   }
@@ -100,15 +102,22 @@ Available Commands:
 Ledger categories must be added before a category can be applied to a transaction.  As all ledger transactions are manually added, an associated category is manually specified when using the `ledger add` subcommand.
 
 ### Datasource Categories
-Categories are automatically added to non-ledger datasources when using the `table csv` subcommand.  Specify a mapping of a keyword substring from the `Description` field of the CSV to the desired category in the JSON file `$MYMINT_CONF_DIR/categories/keyword`.  For example:
+Categories are automatically added to non-ledger datasources when using the `table csv` subcommand.  Manage the mapping of keyword substrings from the `categoryMatchField` field of the CSV to desired categories using the `source category` subcommand.
 ```
-$ cat $MYMINT_CONF_DIR/categories/keyword
-{
-  "netflix": "entertainment",
-  "hbo": "entertainment",
-  "gym": "membership",
-  "kroger": "food",
-  "costco": "food",
-  ...
-}
+$ mymint source category
+Interact with the keyword category mapping for datasources
+
+Usage:
+  mymint source category [flags]
+  mymint source category [command]
+
+Available Commands:
+  add         Add a category to the keyword category mappings
+  delete      Delete a category from the keyword category mappings
+  ls          List the keyword category mapping
 ```
+For example, to automatically assign a `Netflix` transaction to the `subscriptions` category, add `Netflix` as a key and `subscriptions` as a value:
+```
+./mymint source category add -k Netflix -v subscriptions
+```
+The substring matching is case insensitive.
